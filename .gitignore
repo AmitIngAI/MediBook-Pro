@@ -1,22 +1,25 @@
-# Environment
-.env
-.env.*
-*.env
-
-# Node
-node_modules/
-
-# Java
-target/
-
-# IDE
-.idea/
-.vscode/
-
-# Logs
-logs/
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
+# Environment Files 
+.env 
+.env.local 
+**/.env 
+ 
+# IDE 
+.idea/ 
+.vscode/ 
+**/.idea/ 
+**/.vscode/ 
+ 
+# Logs 
+logs/ 
+*.log 
+**/logs/ 
+ 
+# Node 
+node_modules/ 
+**/node_modules/ 
+ 
+# Build 
+target/ 
+**/target/ 
+dist/ 
+build/ 
