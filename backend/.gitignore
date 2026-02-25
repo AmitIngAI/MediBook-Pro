@@ -1,0 +1,30 @@
+# Sensitive files
+src/main/resources/application.properties
+
+# Build files
+target/
+*.jar
+*.class
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# Sensitive files
+.env
+*.env
+.env.*
+
+# Password/credential files
+*password*.txt
+*Password*.txt
+*credentials*.txt
+MySql*.txt
+*Railway*.txt
+Patient*.txt
+Doctor*.txt
+Site*.txt

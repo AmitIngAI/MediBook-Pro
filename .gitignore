@@ -1,0 +1,22 @@
+# Environment
+.env
+.env.*
+*.env
+
+# Node
+node_modules/
+
+# Java
+target/
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
