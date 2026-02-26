@@ -42,11 +42,11 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
         try {
-            const doctorsRes = await fetch('https://medibook-pro.onrender.com/api/doctors');
+            const doctorsRes = await fetch(`${process.env.REACT_APP_API_URL}/doctors');
             const doctorsData = await doctorsRes.json();
             setDoctors(doctorsData);
 
-            const appointmentsRes = await fetch('https://medibook-pro.onrender.com/api/appointments/all');
+            const appointmentsRes = await fetch(`${process.env.REACT_APP_API_URL}/appointments/all');
             const appointmentsData = await appointmentsRes.json();
             setAppointments(appointmentsData);
 
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
 
     const confirmVerifyDoctor = async () => {
         try {
-            await fetch(`https://medibook-pro.onrender.com/api/admin/doctors/${selectedDoctor.id}/verify`, {
+            await fetch(`${process.env.REACT_APP_API_URL}/admin/doctors/${selectedDoctor.id}/verify`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             });
