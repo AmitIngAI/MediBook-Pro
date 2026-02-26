@@ -12,11 +12,34 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// Test database connection
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Database connection error:', err);
+  } else {
+    console.log('Database connected successfully!');
+  }
+});
+
+// Home route
 app.get('/', (req, res) => {
   res.json({ message: 'MediBook Node API is running!' });
 });
 
-// PATIENT ROUTES
+// ============ PATIENT ROUTES ============
+
+// Get all patients
+app.get('/api/patients', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, name, email, phone, created_at FROM patients ORDER BY id');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching patients:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Register Patient
 app.post('/api/auth/register/patient', async (req, res) => {
   const { name, email, password, phone } = req.body;
   try {
@@ -27,10 +50,12 @@ app.post('/api/auth/register/patient', async (req, res) => {
     );
     res.json({ success: true, patient: result.rows[0] });
   } catch (err) {
+    console.error('Error registering patient:', err);
     res.status(400).json({ success: false, error: err.message });
   }
 });
 
+// Login Patient
 app.post('/api/auth/login/patient', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -45,20 +70,25 @@ app.post('/api/auth/login/patient', async (req, res) => {
     }
     res.json({ success: true, patient: { id: patient.id, name: patient.name, email: patient.email } });
   } catch (err) {
+    console.error('Error logging in patient:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-app.get('/api/patients', async (req, res) => {
+// ============ DOCTOR ROUTES ============
+
+// Get all doctors
+app.get('/api/doctors', async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, name, email, phone, created_at FROM patients ORDER BY id');
+    const result = await pool.query('SELECT id, name, email, phone, specialization, created_at FROM doctors ORDER BY id');
     res.json(result.rows);
   } catch (err) {
+    console.error('Error fetching doctors:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// DOCTOR ROUTES
+// Register Doctor
 app.post('/api/auth/register/doctor', async (req, res) => {
   const { name, email, password, phone, specialization } = req.body;
   try {
@@ -69,10 +99,12 @@ app.post('/api/auth/register/doctor', async (req, res) => {
     );
     res.json({ success: true, doctor: result.rows[0] });
   } catch (err) {
+    console.error('Error registering doctor:', err);
     res.status(400).json({ success: false, error: err.message });
   }
 });
 
+// Login Doctor
 app.post('/api/auth/login/doctor', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -87,20 +119,14 @@ app.post('/api/auth/login/doctor', async (req, res) => {
     }
     res.json({ success: true, doctor: { id: doctor.id, name: doctor.name, email: doctor.email, specialization: doctor.specialization } });
   } catch (err) {
+    console.error('Error logging in doctor:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-app.get('/api/doctors', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT id, name, email, phone, specialization, created_at FROM doctors ORDER BY id');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// ============ ADMIN ROUTES ============
 
-// ADMIN ROUTES
+// Register Admin
 app.post('/api/auth/register/admin', async (req, res) => {
   const { name, email, password, phone } = req.body;
   try {
@@ -111,10 +137,12 @@ app.post('/api/auth/register/admin', async (req, res) => {
     );
     res.json({ success: true, admin: result.rows[0] });
   } catch (err) {
+    console.error('Error registering admin:', err);
     res.status(400).json({ success: false, error: err.message });
   }
 });
 
+// Login Admin
 app.post('/api/auth/login/admin', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -129,24 +157,14 @@ app.post('/api/auth/login/admin', async (req, res) => {
     }
     res.json({ success: true, admin: { id: admin.id, name: admin.name, email: admin.email } });
   } catch (err) {
+    console.error('Error logging in admin:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// APPOINTMENT ROUTES
-app.post('/api/appointments', async (req, res) => {
-  const { patient_id, doctor_id, appointment_date, appointment_time, notes } = req.body;
-  try {
-    const result = await pool.query(
-      'INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [patient_id, doctor_id, appointment_date, appointment_time, notes]
-    );
-    res.json({ success: true, appointment: result.rows[0] });
-  } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
-  }
-});
+// ============ APPOINTMENT ROUTES ============
 
+// Get all appointments
 app.get('/api/appointments', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -167,10 +185,27 @@ app.get('/api/appointments', async (req, res) => {
     `);
     res.json(result.rows);
   } catch (err) {
+    console.error('Error fetching appointments:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
+// Create Appointment
+app.post('/api/appointments', async (req, res) => {
+  const { patient_id, doctor_id, appointment_date, appointment_time, notes } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time, notes) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [patient_id, doctor_id, appointment_date, appointment_time, notes]
+    );
+    res.json({ success: true, appointment: result.rows[0] });
+  } catch (err) {
+    console.error('Error creating appointment:', err);
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// Get appointments by patient
 app.get('/api/appointments/patient/:id', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -182,10 +217,12 @@ app.get('/api/appointments/patient/:id', async (req, res) => {
     `, [req.params.id]);
     res.json(result.rows);
   } catch (err) {
+    console.error('Error fetching patient appointments:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
+// Get appointments by doctor
 app.get('/api/appointments/doctor/:id', async (req, res) => {
   try {
     const result = await pool.query(`
@@ -197,10 +234,12 @@ app.get('/api/appointments/doctor/:id', async (req, res) => {
     `, [req.params.id]);
     res.json(result.rows);
   } catch (err) {
+    console.error('Error fetching doctor appointments:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
+// Update appointment status
 app.put('/api/appointments/:id/status', async (req, res) => {
   const { status } = req.body;
   try {
@@ -210,6 +249,7 @@ app.put('/api/appointments/:id/status', async (req, res) => {
     );
     res.json({ success: true, appointment: result.rows[0] });
   } catch (err) {
+    console.error('Error updating appointment status:', err);
     res.status(400).json({ success: false, error: err.message });
   }
 });
