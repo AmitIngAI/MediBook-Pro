@@ -152,3 +152,4 @@ public class AuthService {
 
     return new JwtResponse(token, user.getId(), user.getName(), user.getEmail(), user.getRole().name());
 }
+}
