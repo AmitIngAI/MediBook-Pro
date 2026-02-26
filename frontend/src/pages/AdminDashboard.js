@@ -42,11 +42,11 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
         try {
-            const doctorsRes = await fetch(`${process.env.REACT_APP_API_URL}/doctors');
+            const doctorsRes = await fetch(`${process.env.REACT_APP_API_URL}/doctors`);
             const doctorsData = await doctorsRes.json();
             setDoctors(doctorsData);
 
-            const appointmentsRes = await fetch(`${process.env.REACT_APP_API_URL}/appointments/all');
+            const appointmentsRes = await fetch(`${process.env.REACT_APP_API_URL}/appointments/all`);
             const appointmentsData = await appointmentsRes.json();
             setAppointments(appointmentsData);
 
