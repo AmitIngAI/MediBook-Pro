@@ -39,7 +39,7 @@ const DoctorDashboard = () => {
 
     const fetchAppointments = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/appointments/doctor/user/${userId}`);
+            const response = await fetch(`https://medibook-pro.onrender.com/api/appointments/doctor/user/${userId}`);
             if (response.ok) {
                 const data = await response.json();
                 setAppointments(data);
@@ -59,7 +59,7 @@ const DoctorDashboard = () => {
 
     const handleConfirm = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/appointments/${id}/confirm`, {
+            const response = await fetch(`https://medibook-pro.onrender.com/api/appointments/${id}/confirm`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -75,7 +75,7 @@ const DoctorDashboard = () => {
     const handleCancel = async (id) => {
         if (!window.confirm('Cancel this appointment?')) return;
         try {
-            const response = await fetch(`http://localhost:8080/api/appointments/${id}/cancel`, {
+            const response = await fetch(`https://medibook-pro.onrender.com/api/appointments/${id}/cancel`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -100,7 +100,7 @@ const DoctorDashboard = () => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/api/appointments/${selectedAppointment.id}/complete`, {
+            const response = await fetch(`https://medibook-pro.onrender.com/api/appointments/${selectedAppointment.id}/complete`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prescription: prescription })

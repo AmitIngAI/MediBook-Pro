@@ -40,7 +40,7 @@ const DoctorProfile = () => {
 
     const fetchProfile = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/doctors/user/${userId}`);
+            const response = await fetch(`https://medibook-pro.onrender.com/api/doctors/user/${userId}`);
             if (response.ok) {
                 const data = await response.json();
                 setProfile({
