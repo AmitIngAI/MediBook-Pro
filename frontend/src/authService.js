@@ -2,17 +2,17 @@ import api from './api';
 
 const authService = {
     register: async (userData) => {
-        const response = await api.post('/auth/register/patient', userData);
+        const response = await api.post('/api/auth/register/patient', userData);
         return response.data;
     },
 
     registerDoctor: async (userData) => {
-        const response = await api.post('/auth/register/doctor', userData);
+        const response = await api.post('/api/auth/register/doctor', userData);
         return response.data;
     },
 
     login: async (credentials) => {
-        const response = await api.post('/auth/login', credentials);
+        const response = await api.post('/api/auth/login', credentials);
         if (response.data.token) {
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data));
